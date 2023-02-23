@@ -1,36 +1,19 @@
 <template>
   <section class="exchange">
     <div class="exchange__from">
-      <div class="exchange__currency-from">USD</div>
-      <div class="exchange__currency-from">EUR</div>
-      <div class="exchange__currency-from">UAH</div>
+      <button class="exchange__currency-from">USD</button>
+      <button class="exchange__currency-from">EUR</button>
+      <button class="exchange__currency-from">UAH</button>
     </div>
 
     <div class="exchange__to">
-      <div class="exchange__currency-to">
-        <span>USD</span>
-        <span>123</span>
-        <span>456</span>
-      </div>
-      <div class="exchange__currency-to">
-        <span>USD</span>
-        <span>123</span>
-        <span>456</span>
-      </div>
-      <div class="exchange__currency-to">
-        <span>USD</span>
-        <span>123</span>
-        <span>456</span>
-      </div>
-      <div class="exchange__currency-to">
-        <span>USD</span>
-        <span>123</span>
-        <span>456</span>
-      </div>
-      <div class="exchange__currency-to">
-        <span>USD</span>
-        <span>123</span>
-        <span>456</span>
+      <div
+        class="exchange__currency-to"
+        v-for="(rate, currency) of rates"
+        :key="currency"
+      >
+        <span class="exchange__currency-title">{{ currency }}</span>
+        <span>{{ rate }}</span>
       </div>
     </div>
 
@@ -42,7 +25,11 @@
 </template>
 
 <script lang="ts">
-export default {};
+export default {
+  props: {
+    rates: {},
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -62,16 +49,24 @@ export default {};
     width: 64px;
     padding: 4px;
     background-color: cadetblue;
+    text-align: center;
 
     border: 2px solid rebeccapurple;
     border-radius: 4px;
 
-    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background-color: darkcyan;
+    }
   }
 
   &__to {
     display: flex;
     flex-direction: column;
+    margin: 0 auto;
+    max-width: fit-content;
+
     gap: 8px;
 
     margin-bottom: 8px;
@@ -80,7 +75,14 @@ export default {};
   &__currency-to {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+
+    gap: 24vw;
+
+    border-bottom: 1px dashed #555;
+  }
+
+  &__currency-title {
+    width: 48px;
   }
 
   &__buttons {

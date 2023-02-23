@@ -1,8 +1,8 @@
 <template>
   <section class="converter">
-    <div class="converter__select">
+    <div class="converter__wrapper">
       <input type="number" class="converter__input" />
-      <select>
+      <select class="converter__select">
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="UAH">UAH</option>
@@ -11,9 +11,9 @@
 
     <div class="converter__arrow"></div>
 
-    <div class="converter__select">
-      <span class="converter__result">1234567890</span>
-      <select>
+    <div class="converter__wrapper">
+      <span class="converter__result" title="asd">1234567890</span>
+      <select class="converter__select">
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="UAH">UAH</option>
@@ -23,7 +23,13 @@
 </template>
 
 <script lang="ts">
-export default {};
+export default {
+  props: {
+    currencies: {
+      type: Array,
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -36,10 +42,14 @@ export default {};
 
   border-bottom: 3px solid teal;
 
-  &__select {
+  &__wrapper {
     display: flex;
     justify-content: space-between;
     gap: 8px;
+  }
+
+  &__select {
+    width: max-content;
   }
 
   &__input {
@@ -47,8 +57,8 @@ export default {};
   }
 
   &__result {
-    width: 100%;
     overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__arrow {
