@@ -1,45 +1,51 @@
 <script lang="ts">
-import CurrencyConverter from "./components/CurrencyConverter.vue";
-import ExchangeRate from "./components/ExchangeRate.vue";
-import { getCurrency } from "./api";
+import CurrencyConverter from "./components/CurrencyConverter/CurrencyConverter.vue";
+import ExchangeRate from "./components/ExchangeRate/ExchangeRate.vue";
+import MyLoaderVue from "./components/MyLoader.vue";
+import { getRates } from "./api";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
   components: {
     CurrencyConverter,
     ExchangeRate,
-  },
-
-  methods: {
-    async handleClick() {
-      const result = await getCurrency(this.symbols, "BTC");
-
-      this.rates = result.data.rates;
-
-      console.log(result);
-      console.log(this.rates);
-    },
+    MyLoaderVue,
   },
 
   data() {
     return {
       symbols: ["USD", "EUR", "UAH", "GBP", "BTC", "PLN"],
-      rates: {
-        UAH: 1.5,
-        EUR: 24.457,
-        USD: 1,
-        PLZ: 6.21,
-      },
+      rates: {},
+      isLoading: false,
     };
   },
-};
+
+  methods: {
+    async fetchRates(base: string) {
+      try {
+        this.isLoading = true;
+        const result = await getRates(this.symbols, base);
+        this.rates = result;
+      } catch (error) {
+        alert(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+  },
+
+  mounted() {
+    this.fetchRates("USD");
+  },
+});
 </script>
 
 <template>
   <div class="app">
     <div class="container">
-      <CurrencyConverter :symbols="symbols" />
-      <ExchangeRate :rates="rates" />
-      <button @click="handleClick">click</button>
+      <CurrencyConverter v-if="!isLoading" :rates="rates" :symbols="symbols" />
+      <ExchangeRate v-if="!isLoading" :rates="rates" />
+      <MyLoaderVue v-else />
     </div>
   </div>
 </template>
@@ -53,8 +59,14 @@ export default {
 }
 
 .container {
-  background-color: chocolate;
+  min-height: 256px;
+
+  background-color: #e8b81c;
   border: 3px solid teal;
   border-radius: 16px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <section class="exchange">
     <div class="exchange__from">
-      <button class="exchange__currency-from">USD</button>
-      <button class="exchange__currency-from">EUR</button>
-      <button class="exchange__currency-from">UAH</button>
+      <button class="exchange__button">USD</button>
+      <button class="exchange__button">EUR</button>
+      <button class="exchange__button">UAH</button>
     </div>
 
     <div class="exchange__to">
@@ -18,8 +18,8 @@
     </div>
 
     <div class="exchange__buttons">
-      <button>Add curency</button>
-      <button>Refrech</button>
+      <button class="exchange__button">Add curency</button>
+      <button class="exchange__button">Refrech</button>
     </div>
   </section>
 </template>
@@ -43,22 +43,6 @@ export default {
     gap: 8px;
 
     margin-bottom: 8px;
-  }
-
-  &__currency-from {
-    width: 64px;
-    padding: 4px;
-    background-color: cadetblue;
-    text-align: center;
-
-    border: 2px solid rebeccapurple;
-    border-radius: 4px;
-
-    cursor: pointer;
-
-    &:hover {
-      background-color: darkcyan;
-    }
   }
 
   &__to {
@@ -89,6 +73,21 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+  }
+
+  &__button {
+    padding: 4px 16px;
+    background-color: #e8b81c;
+    text-align: center;
+
+    border: 2px solid #141414;
+    border-radius: 4px;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: #d6aa1c;
+    }
   }
 }
 </style>

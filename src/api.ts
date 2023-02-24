@@ -3,7 +3,7 @@ import axios from "axios";
 const BASE_URL = "https://api.apilayer.com/fixer";
 const API_KEY = "J9yKWEIgirkiCFAdR9cemARJ48ZDrE12";
 
-export const getCurrency = async (symbols: string[], base: string) => {
+export const getRates = async (symbols: string[], base: string) => {
   const stringSymbols = symbols.join(",");
 
   const currency = await axios.get(
@@ -13,5 +13,5 @@ export const getCurrency = async (symbols: string[], base: string) => {
     }
   );
 
-  return currency;
+  return currency.data.rates;
 };
