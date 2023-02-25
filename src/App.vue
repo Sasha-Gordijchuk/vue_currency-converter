@@ -1,7 +1,6 @@
 <script lang="ts">
 import CurrencyConverter from "./components/CurrencyConverter/CurrencyConverter.vue";
 import ExchangeRate from "./components/ExchangeRate/ExchangeRate.vue";
-import MyLoaderVue from "./components/MyLoader.vue";
 import { getRates } from "./api";
 import { defineComponent } from "vue";
 
@@ -9,12 +8,11 @@ export default defineComponent({
   components: {
     CurrencyConverter,
     ExchangeRate,
-    MyLoaderVue,
   },
 
   data() {
     return {
-      symbols: ["USD", "EUR", "UAH", "GBP", "BTC", "PLN"],
+      symbols: [],
       rates: {},
       isLoading: false,
     };
@@ -32,9 +30,21 @@ export default defineComponent({
         this.isLoading = false;
       }
     },
+
+    getSymbols() {
+      if (localStorage.getItem("symbols") === null) {
+        localStorage.setItem(
+          "symbols",
+          JSON.stringify(["USD", "EUR", "UAH", "GBP", "BTC", "PLN"])
+        );
+      }
+
+      this.symbols = JSON.parse(localStorage.getItem("symbols") || "");
+    },
   },
 
   mounted() {
+    this.getSymbols();
     this.fetchRates("USD");
   },
 });
@@ -45,7 +55,7 @@ export default defineComponent({
     <div class="container">
       <CurrencyConverter v-if="!isLoading" :rates="rates" :symbols="symbols" />
       <ExchangeRate v-if="!isLoading" :rates="rates" />
-      <MyLoaderVue v-else />
+      <MyLoader v-else />
     </div>
   </div>
 </template>

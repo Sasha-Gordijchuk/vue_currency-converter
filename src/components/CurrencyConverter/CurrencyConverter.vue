@@ -2,14 +2,13 @@
   <section class="converter">
     <div class="converter__wrapper">
       <input
-        type="number"
         class="converter__input"
         v-model="inputValue"
         @input="convert(false)"
       />
       <select
         v-model="currencyFrom"
-        @change="getRates"
+        @change="($event) => changeRates($event)"
         class="converter__select"
       >
         <option v-for="symbol of symbols" :key="symbol" :value="symbol">
@@ -23,8 +22,7 @@
 
     <div class="converter__wrapper">
       <input
-        type="number"
-        class="converter__result"
+        class="converter__input"
         v-model="resultValue"
         @input="convert(true)"
       />
@@ -45,7 +43,6 @@
 import { getRates } from "@/api";
 import { defineComponent, type PropType } from "vue";
 import type { CurrencyConverterState } from "./CorrencyConverter.typedefs";
-import MyLoader from "../MyLoader.vue";
 import type { Rates } from "@/types/Rates";
 
 export default defineComponent({
@@ -60,7 +57,6 @@ export default defineComponent({
       isRatesLoading: false,
     };
   },
-
   props: {
     rates: {
       required: true,
@@ -71,11 +67,6 @@ export default defineComponent({
       type: Array as PropType<string[]>,
     },
   },
-
-  components: {
-    MyLoader,
-  },
-
   methods: {
     convert(isReverse: boolean) {
       if (isReverse) {
@@ -84,11 +75,10 @@ export default defineComponent({
         this.resultValue = +this.inputValue * this.currentRate;
       }
     },
-
-    async getRates() {
+    async getRates(base: string) {
       try {
         this.isRatesLoading = true;
-        const result = await getRates(this.symbols, this.currencyFrom);
+        const result = await getRates(this.symbols, base);
         this.newRates = result;
         this.changeCurrentRate();
       } catch (error) {
@@ -98,12 +88,32 @@ export default defineComponent({
       }
     },
 
+    async changeRates(event: Event) {
+      let tempCurrentCurrency;
+
+      if (event.target) {
+        tempCurrentCurrency = (event.target as HTMLSelectElement).value;
+
+        if (localStorage.getItem(tempCurrentCurrency) === null) {
+          await this.getRates(tempCurrentCurrency);
+
+          localStorage.setItem(
+            tempCurrentCurrency,
+            JSON.stringify(this.newRates)
+          );
+        } else {
+          this.newRates = JSON.parse(
+            localStorage.getItem(tempCurrentCurrency) || ""
+          );
+        }
+      }
+    },
+
     changeCurrentRate() {
       this.currentRate = this.newRates[this.currencyTo];
       this.convert(false);
     },
   },
-
   mounted() {
     this.newRates = this.rates;
     this.changeCurrentRate();
@@ -119,8 +129,6 @@ export default defineComponent({
   flex-direction: column;
   gap: 8px;
 
-  border-bottom: 3px solid teal;
-
   &__wrapper {
     display: flex;
     justify-content: space-between;
@@ -129,15 +137,32 @@ export default defineComponent({
 
   &__select {
     width: max-content;
+
+    padding: 4px;
+    background-color: rgba(0, 0, 0, 0);
+    border: 2px solid #141414;
+    border-radius: 4px;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
   }
 
   &__input {
     width: 100%;
-  }
 
-  &__result {
-    overflow: hidden;
-    text-overflow: ellipsis;
+    padding: 4px;
+    background-color: rgba(0, 0, 0, 0);
+    border: 2px solid #141414;
+    border-radius: 4px;
+
+    outline: none;
   }
 
   &__arrow {
