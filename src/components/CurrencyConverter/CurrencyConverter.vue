@@ -51,9 +51,9 @@ export default defineComponent({
     return {
       newRates: {},
       inputValue: 0,
+      resultValue: 0,
       currencyFrom: "USD",
       currencyTo: "BTC",
-      resultValue: 0,
       currentRate: 0,
       isRatesLoading: false,
     };

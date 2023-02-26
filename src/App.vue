@@ -4,7 +4,7 @@
       <MyDialog v-model:isVisible="formIsVisible">
         <AddCurrencyForm :symbols="symbols" @add="addSymbol" />
       </MyDialog>
-      <div class="container">
+      <div class="container" v-if="!isLoading">
         <CurrencyConverter :rates="rates" :symbols="symbols" />
 
         <div class="app__buttons">
@@ -18,17 +18,13 @@
           </MyButton>
         </div>
 
-        <ExchangeRate
-          v-if="!isLoading"
-          :rates="rates"
-          :selectedRates="selectedRates"
-        />
-        <MyLoader v-else />
+        <ExchangeRate :rates="rates" :selectedRates="selectedRates" />
         <div class="app__buttons">
           <MyButton @click="showForm">Add curency</MyButton>
           <MyButton @click="refresh">Refrech</MyButton>
         </div>
       </div>
+      <MyLoader v-else />
     </div>
   </div>
 </template>
@@ -131,17 +127,41 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import "@/assets/main.scss";
+
 .page {
   min-height: 100vh;
   min-width: 320px;
 
   padding: 16px;
   background-color: #ccc;
+
+  @include onTablet {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @include onDesktop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .app {
   min-height: 256px;
+  min-width: 312px;
+
   padding: 8px;
+
+  @include onTablet {
+    max-width: fit-content;
+  }
+
+  @include onDesktop {
+    max-width: fit-content;
+  }
 
   background-color: #e8b81c;
   border: 3px solid teal;
