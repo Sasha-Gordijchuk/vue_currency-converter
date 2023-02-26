@@ -40,6 +40,7 @@
 </template>
 
 <script lang="ts">
+import Decimal from "decimal.js";
 import { getRates } from "@/api";
 import { defineComponent, type PropType } from "vue";
 import type { CurrencyConverterState } from "./CorrencyConverter.typedefs";
@@ -67,20 +68,44 @@ export default defineComponent({
       type: Array as PropType<string[]>,
     },
   },
+
   methods: {
     convert(isReverse: boolean) {
+      const decInputValue = new Decimal(this.inputValue || 0);
+      const decCurrentRate = new Decimal(this.currentRate || 0);
+      const decResultValue = new Decimal(this.resultValue || 0);
+      const decUSDRateFrom = new Decimal(
+        this.getRate("USD", this.currencyFrom) || 0
+      );
+      const decUSDRateTo = new Decimal(
+        this.getRate("USD", this.currencyTo) || 0
+      );
+
       if (isReverse) {
-        this.inputValue = +this.resultValue / this.currentRate;
+        if (+decResultValue.div(decUSDRateTo) > 10000) {
+          this.normalize(decUSDRateFrom, decUSDRateTo);
+        } else {
+          this.inputValue = +decResultValue.div(decCurrentRate);
+        }
       } else {
-        this.resultValue = +this.inputValue * this.currentRate;
+        if (+decInputValue.div(decUSDRateFrom) > 10000) {
+          this.normalize(decUSDRateFrom, decUSDRateTo);
+        } else {
+          this.resultValue = +decInputValue.times(decCurrentRate);
+        }
       }
     },
+
+    normalize(from: Decimal, to: Decimal) {
+      this.inputValue = +from.times("10000");
+      this.resultValue = +to.times("10000");
+    },
+
     async getRates(base: string) {
       try {
         this.isRatesLoading = true;
         const result = await getRates(this.symbols, base);
         this.newRates = result;
-        this.changeCurrentRate();
       } catch (error) {
         alert(error);
       } finally {
@@ -107,6 +132,14 @@ export default defineComponent({
           );
         }
       }
+
+      this.changeCurrentRate();
+    },
+
+    getRate(from: string, to: string) {
+      const rate: Rates = JSON.parse(localStorage.getItem(from) || "");
+
+      return rate[to];
     },
 
     changeCurrentRate() {
@@ -114,6 +147,7 @@ export default defineComponent({
       this.convert(false);
     },
   },
+
   mounted() {
     this.newRates = this.rates;
     this.changeCurrentRate();

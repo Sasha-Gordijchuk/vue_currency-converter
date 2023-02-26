@@ -52,6 +52,8 @@ export default defineComponent({
         this.isLoading = true;
         const result = await getRates(this.symbols, base);
         this.rates = result;
+
+        localStorage.setItem("USD", JSON.stringify(result));
       } catch (error) {
         alert(error);
       } finally {
