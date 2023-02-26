@@ -16,11 +16,6 @@
         <span>{{ rate }}</span>
       </div>
     </div>
-
-    <div class="exchange__buttons">
-      <MyButton>Add curency</MyButton>
-      <MyButton>Refrech</MyButton>
-    </div>
   </section>
 </template>
 
@@ -50,8 +45,7 @@ export default {
   &__to {
     display: flex;
     flex-direction: column;
-    margin: 0 auto;
-    max-width: fit-content;
+    max-width: 100%;
 
     gap: 8px;
 
@@ -62,19 +56,14 @@ export default {
     display: flex;
     flex-direction: row;
 
-    gap: 24vw;
+    gap: 40%;
 
     border-bottom: 1px dashed #555;
   }
 
   &__currency-title {
     width: 48px;
-  }
-
-  &__buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    margin-left: 8px;
   }
 }
 </style>
