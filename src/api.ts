@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const BASE_URL = "https://api.apilayer.com/fixer";
-const API_KEY = "jjjwMBnRwHpvAZn9AYdFwfiqurV8S1Ej";
+const API_KEY = "2OhXgt2E0j2jysEWNQQtvmUqzobaplbi";
 
 export const getRates = async (symbols: string[], base: string) => {
   const stringSymbols = symbols.join(",");
