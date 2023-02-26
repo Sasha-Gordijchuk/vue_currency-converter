@@ -137,9 +137,9 @@ export default defineComponent({
     },
 
     getRate(from: string, to: string) {
-      const rate: Rates = JSON.parse(localStorage.getItem(from) || "");
+      const rate: Rates = JSON.parse(localStorage.getItem(from) || "{}");
 
-      return rate[to];
+      return rate[to] || 0;
     },
 
     changeCurrentRate() {
@@ -162,6 +162,8 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  border-bottom: 3px solid teal;
 
   &__wrapper {
     display: flex;

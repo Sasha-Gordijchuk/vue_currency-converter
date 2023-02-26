@@ -4,14 +4,30 @@
       <MyDialog v-model:isVisible="formIsVisible">
         <AddCurrencyForm :symbols="symbols" @add="addSymbol" />
       </MyDialog>
-      <div class="container" v-if="!isLoading">
+      <div class="container">
         <CurrencyConverter :rates="rates" :symbols="symbols" />
-        <ExchangeRate :rates="rates" />
-      </div>
-      <MyLoader v-else />
-      <div class="app__buttons">
-        <MyButton @click="showForm">Add curency</MyButton>
-        <MyButton @click="refresh">Refrech</MyButton>
+
+        <div class="app__buttons">
+          <MyButton
+            v-for="currSymbol of ['USD', 'EUR', 'UAH']"
+            :key="currSymbol"
+            :class="{ button__active: selectedRates === currSymbol }"
+            @click="changeVisibleRates(currSymbol)"
+          >
+            {{ currSymbol }}
+          </MyButton>
+        </div>
+
+        <ExchangeRate
+          v-if="!isLoading"
+          :rates="rates"
+          :selectedRates="selectedRates"
+        />
+        <MyLoader v-else />
+        <div class="app__buttons">
+          <MyButton @click="showForm">Add curency</MyButton>
+          <MyButton @click="refresh">Refrech</MyButton>
+        </div>
       </div>
     </div>
   </div>
@@ -37,12 +53,14 @@ export default defineComponent({
     rates: Rates;
     isLoading: boolean;
     formIsVisible: boolean;
+    selectedRates: string;
   } {
     return {
       symbols: [],
       rates: {},
       isLoading: false,
       formIsVisible: false,
+      selectedRates: "USD",
     };
   },
 
@@ -53,7 +71,7 @@ export default defineComponent({
         const result = await getRates(this.symbols, base);
         this.rates = result;
 
-        localStorage.setItem("USD", JSON.stringify(result));
+        localStorage.setItem(base, JSON.stringify(result));
       } catch (error) {
         alert(error);
       } finally {
@@ -80,11 +98,24 @@ export default defineComponent({
 
       this.symbols = localSymbols;
       this.formIsVisible = false;
-      this.fetchRates("USD");
+      this.fetchRates(this.selectedRates);
+    },
+
+    changeVisibleRates(base: string) {
+      this.selectedRates = base;
+
+      this.fetchRates(base);
     },
 
     refresh() {
-      this.fetchRates("USD");
+      const tempSymbols = localStorage.getItem("symbols");
+      const tempAllSymbols = localStorage.getItem("allSymbols");
+
+      localStorage.clear();
+
+      localStorage.setItem("symbols", tempSymbols || "");
+      localStorage.setItem("allSymbols", tempAllSymbols || "");
+      this.fetchRates(this.selectedRates);
     },
 
     showForm() {
@@ -94,7 +125,7 @@ export default defineComponent({
 
   mounted() {
     this.getSymbols();
-    this.fetchRates("USD");
+    this.fetchRates(this.selectedRates);
   },
 });
 </script>
@@ -126,5 +157,11 @@ export default defineComponent({
     justify-content: space-around;
     width: 100%;
   }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 </style>

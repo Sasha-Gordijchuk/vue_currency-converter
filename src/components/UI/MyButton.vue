@@ -25,7 +25,8 @@ export default {
     background-color: rgba(0, 0, 0, 0.2);
   }
 
-  &:active {
+  &:active,
+  &__active {
     background-color: rgba(0, 0, 0, 0.4);
   }
 }

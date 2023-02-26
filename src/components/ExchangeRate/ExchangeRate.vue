@@ -1,11 +1,5 @@
 <template>
   <section class="exchange">
-    <div class="exchange__from">
-      <MyButton>USD</MyButton>
-      <MyButton>EUR</MyButton>
-      <MyButton>UAH</MyButton>
-    </div>
-
     <div class="exchange__to">
       <div
         class="exchange__currency-to"
@@ -31,9 +25,7 @@ export default {
 .exchange {
   padding: 8px;
 
-  border-top: 3px solid teal;
-
-  &__from {
+  &__buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
