@@ -29,5 +29,11 @@ export default {
   &__active {
     background-color: rgba(0, 0, 0, 0.4);
   }
+
+  &:disabled {
+    background-color: rgba(0, 0, 0, 0);
+
+    border: 2px solid gray;
+  }
 }
 </style>

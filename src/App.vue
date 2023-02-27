@@ -21,7 +21,10 @@
         <ExchangeRate :rates="rates" :selectedRates="selectedRates" />
         <div class="app__buttons">
           <MyButton @click="showForm">Add curency</MyButton>
-          <MyButton @click="refresh">Refrech</MyButton>
+
+          <MyButton :disabled="isRefreshingDisabled" @click="refresh">
+            Refrech
+          </MyButton>
         </div>
       </div>
       <MyLoader v-else />
@@ -49,6 +52,7 @@ export default defineComponent({
     rates: Rates;
     isLoading: boolean;
     formIsVisible: boolean;
+    isRefreshingDisabled: boolean;
     selectedRates: string;
   } {
     return {
@@ -56,6 +60,7 @@ export default defineComponent({
       rates: {},
       isLoading: false,
       formIsVisible: false,
+      isRefreshingDisabled: false,
       selectedRates: "USD",
     };
   },
@@ -112,6 +117,12 @@ export default defineComponent({
       localStorage.setItem("symbols", tempSymbols || "");
       localStorage.setItem("allSymbols", tempAllSymbols || "");
       this.fetchRates(this.selectedRates);
+
+      this.isRefreshingDisabled = true;
+
+      setTimeout(() => {
+        this.isRefreshingDisabled = false;
+      }, 5000);
     },
 
     showForm() {
