@@ -20,7 +20,7 @@
 
         <ExchangeRate :rates="rates" :selectedRates="selectedRates" />
         <div class="app__buttons">
-          <MyButton @click="showForm">Add curency</MyButton>
+          <MyButton @click="showForm">Add currency</MyButton>
 
           <MyButton :disabled="isRefreshingDisabled" @click="refresh">
             Refrech
