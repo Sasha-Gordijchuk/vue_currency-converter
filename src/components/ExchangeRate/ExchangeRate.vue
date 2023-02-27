@@ -7,7 +7,7 @@
         :key="currency"
       >
         <span class="exchange__currency-title">{{ currency }}</span>
-        <span>{{ rate }}</span>
+        <span class="exchange__currency-rate">{{ rate }}</span>
       </div>
     </div>
   </section>
@@ -56,6 +56,11 @@ export default {
   &__currency-title {
     width: 48px;
     margin-left: 8px;
+  }
+
+  &__currency-rate {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>
